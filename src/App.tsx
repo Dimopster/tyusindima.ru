@@ -24,11 +24,7 @@ function App() {
         <Process />
         <ProjectsIntro />
         <Projects />
-        {/* The closing pill zoom starts from a full black screen: on desktop
-            the flying cards cover that, on a phone it is just empty scrolling. */}
-        <div className="hidden md:block">
-          <ProjectsOutro />
-        </div>
+        <ProjectsOutro />
       </main>
       <Footer />
     </LenisProvider>

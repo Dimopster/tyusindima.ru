@@ -393,11 +393,14 @@ export function About() {
                         >
                             {WAVE_LINES.map((l, i) => {
                                 const baseY = vp.h * l.yPct
+                                // Phones: one period per screen width and a lower
+                                // amplitude, so the lines roll as gently as on desktop.
+                                const mobile = vp.w < 768
                                 const d = buildWavePath(
                                     totalWaveWidth,
                                     baseY,
-                                    l.amp,
-                                    l.periods,
+                                    mobile ? Math.round(l.amp * 0.6) : l.amp,
+                                    mobile ? 2 : l.periods,
                                     l.phase,
                                 )
                                 const driftPx = -vp.w

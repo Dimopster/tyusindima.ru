@@ -201,6 +201,13 @@ export function Hero() {
 
             {/* Everything below is white + difference: dark on the grey background,
                 light on the dark jacket and hair. */}
+            {/* Mobile: the name and the links share one column between the role
+                line and the Ornament wave. The spacer aims the name at 46svh (across
+                the face) but shrinks on short screens (Safari with its toolbars), so
+                the links can never ride up over the name. On desktop the column
+                dissolves (md:contents) and both blocks are positioned on the section. */}
+            <div className="pointer-events-none absolute inset-x-6 top-[150px] bottom-[72px] flex flex-col md:contents">
+            <div aria-hidden className="shrink basis-[calc(46svh-150px)] md:hidden" />
             {/* Mobile: two stacked lines across the face. Desktop: the h1 is the
                 full-height left half, so the fitted lines are half-width; "Tyusin"
                 sits top-right starting at the page centre, "Dmitry" bottom-left.
@@ -209,7 +216,7 @@ export function Hero() {
             <h1
                 ref={nameRef}
                 aria-label={NAME}
-                className="pointer-events-none absolute inset-x-6 top-[46svh] md:inset-y-0 md:left-10 md:right-1/2 font-medium leading-[0.82] tracking-[-0.055em] text-white mix-blend-difference whitespace-nowrap"
+                className="pointer-events-none relative shrink-0 md:absolute md:inset-y-0 md:left-10 md:right-1/2 font-medium leading-[0.82] tracking-[-0.055em] text-white mix-blend-difference whitespace-nowrap"
             >
                 <span
                     data-line
@@ -227,26 +234,9 @@ export function Hero() {
                 </span>
             </h1>
 
-            <p
-                ref={roleRef}
-                aria-label={`${PROMPT} ${COMMAND}${ARG}`}
-                className="absolute left-6 top-[100px] md:left-10 md:top-[124px] font-mono font-medium [font-variant-ligatures:none] leading-[1.5] text-[clamp(0.95rem,1.55vw,1.75rem)] text-white mix-blend-difference"
-            >
-                <span data-type aria-hidden className="block overflow-hidden whitespace-nowrap opacity-60">
-                    {PROMPT}
-                </span>
-                <span className="flex items-center" aria-hidden>
-                    <span data-type className="inline-block overflow-hidden whitespace-nowrap">
-                        {COMMAND}
-                        <span className="font-extrabold">{ARG}</span>
-                    </span>
-                    <span className="ml-[0.15em] inline-block h-[1.1em] w-[0.6em] bg-white animate-[caret-blink_1s_steps(1)_infinite]" />
-                </span>
-            </p>
-
             <div
                 ref={cornersRef}
-                className="absolute right-6 bottom-0 pb-[136px] md:right-10 text-white mix-blend-difference"
+                className="pointer-events-auto mt-7 shrink-0 self-end text-white mix-blend-difference md:absolute md:right-10 md:bottom-0 md:mt-0 md:pb-[136px]"
             >
                 <ul className="flex flex-col gap-2 font-mono [font-variant-ligatures:none]">
                     {SOCIAL.map((s, i) => (
@@ -269,6 +259,24 @@ export function Hero() {
                     ))}
                 </ul>
             </div>
+            </div>
+
+            <p
+                ref={roleRef}
+                aria-label={`${PROMPT} ${COMMAND}${ARG}`}
+                className="absolute left-6 top-[100px] md:left-10 md:top-[124px] font-mono font-medium [font-variant-ligatures:none] leading-[1.5] text-[clamp(0.95rem,1.55vw,1.75rem)] text-white mix-blend-difference"
+            >
+                <span data-type aria-hidden className="block overflow-hidden whitespace-nowrap opacity-60">
+                    {PROMPT}
+                </span>
+                <span className="flex items-center" aria-hidden>
+                    <span data-type className="inline-block overflow-hidden whitespace-nowrap">
+                        {COMMAND}
+                        <span className="font-extrabold">{ARG}</span>
+                    </span>
+                    <span className="ml-[0.15em] inline-block h-[1.1em] w-[0.6em] bg-white animate-[caret-blink_1s_steps(1)_infinite]" />
+                </span>
+            </p>
         </section>
     )
 }

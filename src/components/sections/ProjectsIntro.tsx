@@ -33,6 +33,12 @@ function buildPillPath(vw: number, vh: number, pillW: number, pillH: number) {
   ].join(' ')
 }
 
+
+// Short viewports (a phone with Safari's toolbars, small laptops): the pill and
+// its letters shrink until the whole pill fits on screen. 1080p desktop: 1.
+function pillFit(vh: number) {
+  return Math.min(1, (vh - 110) / PILL_H)
+}
 export function ProjectsIntro() {
   const sectionRef = useRef<HTMLElement>(null)
   const stickyRef = useRef<HTMLDivElement>(null)
@@ -108,8 +114,9 @@ export function ProjectsIntro() {
         const eased = zoomP * zoomP
         const scale = 1 + eased * (MAX_SCALE - 1)
 
-        const newW = PILL_W * scale
-        const newH = PILL_H * scale
+        const fit = pillFit(window.innerHeight)
+        const newW = PILL_W * fit * scale
+        const newH = PILL_H * fit * scale
         const d = buildPillPath(
           window.innerWidth,
           window.innerHeight,
@@ -168,15 +175,19 @@ export function ProjectsIntro() {
     }
   }, [])
 
-  const initialD = buildPillPath(vp.w, vp.h, PILL_W, PILL_H)
+    const fit = pillFit(vp.h)
+  const pillW = PILL_W * fit
+  const pillH = PILL_H * fit
+
+const initialD = buildPillPath(vp.w, vp.h, pillW, pillH)
 
   // Decor geometry — derived from pill position
   const cx = vp.w / 2
   const cy = vp.h / 2 + Y_OFFSET
-  const pillLeft = cx - PILL_W / 2
-  const pillRight = cx + PILL_W / 2
-  const pillTop = cy - PILL_H / 2
-  const pillBottom = cy + PILL_H / 2
+  const pillLeft = cx - pillW / 2
+  const pillRight = cx + pillW / 2
+  const pillTop = cy - pillH / 2
+  const pillBottom = cy + pillH / 2
   // Safe zones — keep decor anchored to pill edges from running past the
   // sticky's clipped bounds on smaller viewports.
   const pillTopSafe = Math.max(pillTop, 30)
@@ -186,9 +197,9 @@ export function ProjectsIntro() {
   const NAV_CLEARANCE = 96
   const BOTTOM_CLEARANCE = 40
   const maxRadius = Math.min(cy - NAV_CLEARANCE, vp.h - cy - BOTTOM_CLEARANCE)
-  const ringOuterR = Math.min(PILL_H * 0.85, maxRadius)
-  const ringMidR = Math.min(PILL_H * 0.7, maxRadius - 18)
-  const ringInnerR = Math.min(PILL_H * 0.56, maxRadius - 36)
+  const ringOuterR = Math.min(pillH * 0.85, maxRadius)
+  const ringMidR = Math.min(pillH * 0.7, maxRadius - 18)
+  const ringInnerR = Math.min(pillH * 0.56, maxRadius - 36)
 
   return (
     <section ref={sectionRef} className="relative bg-[var(--color-fg)]">
@@ -373,7 +384,7 @@ export function ProjectsIntro() {
               x1="40"
               y1="40"
               x2={pillLeft - 100}
-              y2={cy - PILL_H * 0.3}
+              y2={cy - pillH * 0.3}
               stroke="var(--color-fg)"
               strokeOpacity="0.22"
               strokeWidth="1"
@@ -382,7 +393,7 @@ export function ProjectsIntro() {
               x1={vp.w - 40}
               y1="40"
               x2={pillRight + 100}
-              y2={cy - PILL_H * 0.3}
+              y2={cy - pillH * 0.3}
               stroke="var(--color-fg)"
               strokeOpacity="0.22"
               strokeWidth="1"
@@ -391,7 +402,7 @@ export function ProjectsIntro() {
               x1="40"
               y1={vp.h - 40}
               x2={pillLeft - 100}
-              y2={cy + PILL_H * 0.3}
+              y2={cy + pillH * 0.3}
               stroke="var(--color-fg)"
               strokeOpacity="0.22"
               strokeWidth="1"
@@ -400,7 +411,7 @@ export function ProjectsIntro() {
               x1={vp.w - 40}
               y1={vp.h - 40}
               x2={pillRight + 100}
-              y2={cy + PILL_H * 0.3}
+              y2={cy + pillH * 0.3}
               stroke="var(--color-fg)"
               strokeOpacity="0.22"
               strokeWidth="1"
@@ -408,10 +419,10 @@ export function ProjectsIntro() {
 
             {/* Crosshair markers at endpoints of diagonals (close to pill) */}
             {[
-              { x: pillLeft - 100, y: cy - PILL_H * 0.3 },
-              { x: pillRight + 100, y: cy - PILL_H * 0.3 },
-              { x: pillLeft - 100, y: cy + PILL_H * 0.3 },
-              { x: pillRight + 100, y: cy + PILL_H * 0.3 },
+              { x: pillLeft - 100, y: cy - pillH * 0.3 },
+              { x: pillRight + 100, y: cy - pillH * 0.3 },
+              { x: pillLeft - 100, y: cy + pillH * 0.3 },
+              { x: pillRight + 100, y: cy + pillH * 0.3 },
             ].map((c, i) => (
               <g key={`cross${i}`}>
                 <line
@@ -522,16 +533,16 @@ export function ProjectsIntro() {
           </div>
 
           {/* Corner mono labels */}
-          <div className="absolute top-6 left-12 font-mono text-[0.6rem] uppercase tracking-[0.18em] text-[var(--color-fg)]/55">
+          <div className="absolute hidden md:block top-6 left-12 font-mono text-[0.6rem] uppercase tracking-[0.18em] text-[var(--color-fg)]/55">
             [ 04 ]&nbsp;&nbsp;chapter
           </div>
-          <div className="absolute top-6 right-12 font-mono text-[0.6rem] uppercase tracking-[0.18em] text-[var(--color-fg)]/55">
+          <div className="absolute hidden md:block top-6 right-12 font-mono text-[0.6rem] uppercase tracking-[0.18em] text-[var(--color-fg)]/55">
             05 / projects
           </div>
-          <div className="absolute bottom-6 left-12 font-mono text-[0.6rem] uppercase tracking-[0.18em] text-[var(--color-fg)]/45">
+          <div className="absolute hidden md:block bottom-6 left-12 font-mono text-[0.6rem] uppercase tracking-[0.18em] text-[var(--color-fg)]/45">
             lat.55.751 / lon.37.617
           </div>
-          <div className="absolute bottom-6 right-12 font-mono text-[0.6rem] uppercase tracking-[0.18em] text-[var(--color-fg)]/45">
+          <div className="absolute hidden md:block bottom-6 right-12 font-mono text-[0.6rem] uppercase tracking-[0.18em] text-[var(--color-fg)]/45">
             v.1.0&nbsp;&nbsp;·&nbsp;&nbsp;portfolio
           </div>
         </div>
@@ -549,7 +560,7 @@ export function ProjectsIntro() {
             <span
               key={l}
               className="block font-extrabold tracking-[-0.04em] leading-[0.9] text-[var(--color-bg)]"
-              style={{ fontSize: `${LETTER_FONT}px` }}
+              style={{ fontSize: `${LETTER_FONT * fit}px` }}
             >
               {l}
             </span>

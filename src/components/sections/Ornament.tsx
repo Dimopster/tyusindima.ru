@@ -12,6 +12,13 @@ const AMP = 42
 const TUNNEL_GAP = 90
 const STROKE_WIDTH = 1.6
 
+// Phones: one period with a smaller amplitude and gap, so the slope matches
+// the desktop wave instead of being five times steeper, and the tunnel stays
+// within ~50px of the boundary (clear of the hero links and the About label).
+const MOBILE_PERIODS = 1
+const MOBILE_AMP = 18
+const MOBILE_TUNNEL_GAP = 60
+
 // Binary pattern long enough to cover wide viewports comfortably. Period is
 // 4 chars ("0 1 ") so a single-pattern shift yields a seamless loop.
 const BINARY_PATTERN = '0 1 0 1 1 0 1 0 0 1 1 1 0 1 0 0 '
@@ -150,14 +157,19 @@ export function Ornament() {
     }
   }, [vw])
 
-  const centreY = HEIGHT / 2
-  const topY = centreY - TUNNEL_GAP / 2
-  const bottomY = centreY + TUNNEL_GAP / 2
+  const mobile = vw < 768
+  const periods = mobile ? MOBILE_PERIODS : PERIODS
+  const amp = mobile ? MOBILE_AMP : AMP
+  const gap = mobile ? MOBILE_TUNNEL_GAP : TUNNEL_GAP
 
-  const tunnel = buildClosedTunnelPath(vw, topY, bottomY, AMP, PERIODS)
-  const topPath = buildSinePath(vw, topY, AMP, PERIODS)
-  const bottomPath = buildSinePath(vw, bottomY, AMP, PERIODS)
-  const midPath = buildSinePath(vw, centreY, AMP, PERIODS)
+  const centreY = HEIGHT / 2
+  const topY = centreY - gap / 2
+  const bottomY = centreY + gap / 2
+
+  const tunnel = buildClosedTunnelPath(vw, topY, bottomY, amp, periods)
+  const topPath = buildSinePath(vw, topY, amp, periods)
+  const bottomPath = buildSinePath(vw, bottomY, amp, periods)
+  const midPath = buildSinePath(vw, centreY, amp, periods)
 
   return (
     <section

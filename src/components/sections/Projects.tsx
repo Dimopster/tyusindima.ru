@@ -226,22 +226,12 @@ export function Projects() {
                 </div>
             </div>
 
-            {/* Mobile: snap-scroll */}
-            <div className="md:hidden">
-                <div
-                    className="flex gap-4 overflow-x-auto px-6 py-12"
-                    style={{ scrollSnapType: 'x mandatory' }}
-                >
-                    {PROJECTS.map((p) => (
-                        <div
-                            key={p.scene}
-                            className="flex-shrink-0 w-[85vw]"
-                            style={{ scrollSnapAlign: 'start' }}
-                        >
-                            <ProjectCard project={p} />
-                        </div>
-                    ))}
-                </div>
+            {/* Mobile: the cards simply stack and scroll with the page — a
+                sideways swipe inside a vertical page is easy to miss. */}
+            <div className="md:hidden flex flex-col gap-6 px-6 py-12">
+                {PROJECTS.map((p) => (
+                    <ProjectCard key={p.scene} project={p} />
+                ))}
             </div>
         </section>
     )
