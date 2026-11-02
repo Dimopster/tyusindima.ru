@@ -1,0 +1,104 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #FFFFFF;
+  --color-fg: #0A0A0A;
+  --color-fg-muted: #525252;
+  --color-fg-subtle: #A3A3A3;
+  --color-line: #E5E5E5;
+  --color-line-subtle: #F0F0F0;
+  --color-surface: #FAFAFA;
+
+  --font-display: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  html,
+  body {
+    background: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-display);
+  }
+
+  /* Clip on html too: wide decorative SVGs otherwise widen the mobile
+     layout viewport and push fixed elements (nav button) off-screen. */
+  html,
+  body {
+    overflow-x: clip;
+  }
+
+  body {
+    margin: 0;
+  }
+
+  ::selection {
+    background: var(--color-fg);
+    color: var(--color-bg);
+  }
+}
+
+@utility font-mono {
+  font-family: var(--font-mono);
+  font-feature-settings: 'zero', 'ss20';
+}
+
+@utility eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-fg-subtle);
+}
+
+@utility text-stroke-outline {
+  -webkit-text-stroke: 2px var(--color-fg);
+  color: transparent;
+}
+
+@keyframes caret-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes pi-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes pi-wave-drift {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(var(--drift-x, -100vw), 0, 0); }
+}
+
+/* About cinematic — мix-blend-difference inverts текст автоматически.
+   Все цвета внутри stage-content должны быть white или прозрачно-white,
+   тогда discounted blend выдаст контраст против любого bg. */
+.about-cinematic-prose {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.about-cinematic-prose em {
+  font-style: italic;
+  color: #fff;
+  font-weight: 500;
+}
+
+.about-cinematic-prose code {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  font-weight: 500;
+  color: #fff;
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+}
